@@ -1,7 +1,0 @@
-ss : sss
-banana : yellow fruit; commonly used in desserts
-aaa : sda;afdsds;fhfg
-apple : a kind of fruit; a tech company
-computer : an electronic device
-java : a programming language; an Indonesian island
-asd : asd
