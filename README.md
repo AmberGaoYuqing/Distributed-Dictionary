@@ -34,8 +34,8 @@ Both the client and server provide GUI interfaces to enhance usability and trans
 
 - All interactions are performed using JSON over TCP sockets.
 - For each operation (add, query, delete, update):
-    - The client sends a structured JSON request.
-    - The server parses, validates, and responds with a JSON result.
+  - The client sends a structured JSON request.
+  - The server parses, validates, and responds with a JSON result.
 
 ### 3.2 Threading and Concurrency
 
@@ -60,9 +60,9 @@ This project adopts **thread-per-connection** for session-level simplicity, erro
 ### 4.2 Operational Observability (ServerGUI)
 
 - GUI tracks:
-    - Connected clients
-    - Connection count
-    - Per-thread logs of client actions
+  - Connected clients
+  - Connection count
+  - Per-thread logs of client actions
 - Maps each `Socket` to a client ID using `ConcurrentHashMap<Socket, String>`
 - Reinforces session visibility, aids debugging and auditing
 
@@ -70,17 +70,17 @@ This project adopts **thread-per-connection** for session-level simplicity, erro
 
 ## 5. Installation and Setup
 
-### System Requirements
+### 5.System Requirements
 
 * Java JDK 8 or later
 * IntelliJ IDEA or any Java IDE
 * Command line terminal (Bash, CMD, PowerShell)
 
-###  Dependencies
+### 5.2 Dependencies
 
 * Gson library (included in `lib/gson-2.10.1.jar`)
 
-###  Compile and Run
+### 5.3 Compile and Run
 
 **To compile:**
 
@@ -105,11 +105,11 @@ java -cp ".;lib/gson-2.10.1.jar" client.Client
 ---
 ## 6. User Guide
 
-###  Server Startup
+### 6.1 Server Startup
 
 * Run `server.Server` to start the GUI-based dictionary server.
 
-### 👤 Client Usage
+### 6.2 Client Usage
 
 * Run `client.Client` to open the client GUI.
 * Enter server IP and port.
@@ -120,7 +120,7 @@ java -cp ".;lib/gson-2.10.1.jar" client.Client
   * **Update** existing word’s definition
   * **Remove** a word
 
-###  Supported Operations
+### 6.3 Supported Operations
 
 | Operation | Description                     |
 | --------- | ------------------------------- |
@@ -130,13 +130,13 @@ java -cp ".;lib/gson-2.10.1.jar" client.Client
 | Remove    | Delete a word from dictionary   |
 
 
-###  GUI Functionalities
+### 6.4 GUI Functionalities
 
 * Text boxes for input
 * Buttons: Add, Update, Query, Remove
 * Display area for server response
 
-###  Class Responsibilities
+### 6.5 Class Responsibilities
 
 | Class                  | Role Description                          |
 | ---------------------- | ----------------------------------------- |
@@ -151,13 +151,13 @@ java -cp ".;lib/gson-2.10.1.jar" client.Client
 
 ## 7 Future Enhancements
 
-###  Suggestions for Improvement
+### 7.1 Suggestions for Improvement
 
 * Add login/user authentication
 * Richer GUI feedback (e.g., color coding, animations)
 * Admin panel to ban or kick users
 
-###  Potential Feature Extensions
+### 7.2 Potential Feature Extensions
 
 * Dictionary search by prefix/suffix
 * Speech-to-text input for mobile use
