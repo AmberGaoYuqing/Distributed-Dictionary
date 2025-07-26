@@ -1,0 +1,53 @@
+@startuml Client-Server Interaction Diagram
+
+participant "ClientUI" as UI
+participant "ActionHandler" as AH
+participant "Client" as C
+participant "ResponseHandler" as RH
+participant "Server" as S
+participant "RequestHandler" as RQH
+participant "DictionaryManager" as DM
+
+== Client Initialization ==
+UI -> C: new Client(address, port)
+C -> C: start()
+C -> S: Socket connection
+S -> RQH: new RequestHandler(socket, dictionaryManager)
+RQH -> RQH: start()
+C -> RH: new ResponseHandler(reader, responseQueue)
+RH -> RH: start()
+
+== Dictionary Operation Flow ==
+UI -> AH: actionPerformed() [User clicks button]
+AH -> AH: handleAdd() / handleQuery() / handleDelete() / handleAddMeaning() / handleUpdate()
+AH -> AH: create JSON request
+AH -> C: sendRequest(jsonRequest)
+C -> C: requestQueue.put(request)
+C -> S: write(request)
+S -> RQH: read(request)
+RQH -> RQH: parse JSON
+RQH -> RQH: switch(command)
+RQH -> DM: loadDictionary() / saveDictionary() / updateDisplay()
+RQH -> S: sendResponse(response)
+S -> C: write(response)
+C -> RH: read(response)
+RH -> C: responseQueue.put(response)
+C -> AH: getResponse()
+AH -> UI: update outputArea
+
+== Error Handling ==
+RQH -> RQH: sendErrorResponse(errorMsg)
+RQH -> S: write(error)
+S -> C: write(error)
+C -> RH: read(error)
+RH -> C: responseQueue.put(error)
+C -> AH: getResponse()
+AH -> UI: display error
+
+== Connection Management ==
+C -> S: disconnect
+S -> RQH: IOException
+RQH -> S: update clientCount
+S -> UI: update display
+
+@enduml 
