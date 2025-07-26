@@ -68,7 +68,175 @@ This project adopts **thread-per-connection** for session-level simplicity, erro
 
 ---
 
-## 5. Conclusion
+## 5. Installation and Setup
+
+### System Requirements
+
+* Java JDK 8 or later
+* IntelliJ IDEA or any Java IDE
+* Command line terminal (Bash, CMD, PowerShell)
+
+###  Dependencies
+
+* Gson library (included in `lib/gson-2.10.1.jar`)
+
+###  Compile and Run
+
+**To compile:**
+
+```bash
+javac -cp ".;lib/gson-2.10.1.jar" server/*.java client/*.java
+```
+
+**To start the server:**
+
+```bash
+java -cp ".;lib/gson-2.10.1.jar" server.Server
+```
+
+**To start the client:**
+
+```bash
+java -cp ".;lib/gson-2.10.1.jar" client.Client
+```
+
+> Replace `;` with `:` on Unix-based systems.
+
+---
+## 6. User Guide
+
+###  Server Startup
+
+* Run `server.Server` to start the GUI-based dictionary server.
+
+### 👤 Client Usage
+
+* Run `client.Client` to open the client GUI.
+* Enter server IP and port.
+* Perform operations like:
+
+  * **Query** word definition
+  * **Add** new word and meaning
+  * **Update** existing word’s definition
+  * **Remove** a word
+
+###  Supported Operations
+
+| Operation | Description                     |
+| --------- | ------------------------------- |
+| Query     | Lookup a word’s meaning         |
+| Add       | Add a new word                  |
+| Update    | Modify existing word definition |
+| Remove    | Delete a word from dictionary   |
+
+
+###  GUI Functionalities
+
+* Text boxes for input
+* Buttons: Add, Update, Query, Remove
+* Display area for server response
+
+###  Class Responsibilities
+
+| Class                  | Role Description                          |
+| ---------------------- | ----------------------------------------- |
+| Client.java            | Starts client, sets up socket connection  |
+| ClientUI.java          | GUI interface for dictionary operations   |
+| ActionHandler.java     | Handles button actions                    |
+| ResponseHandler.java   | Displays messages from server             |
+| Server.java            | Starts server socket and GUI              |
+| ServerGUI.java         | Displays connected clients and logs       |
+| RequestHandler.java    | Thread to handle each client request      |
+| DictionaryManager.java | CRUD logic and dictionary file management |
+
+
+### UML Class Diagram
+
+```mermaid
+
+classDiagram
+
+     %% Main Components
+
+    class Server {
+        -server: Server
+        -dictionary: ConcurrentHashMap<String, String>
+        -clientIDCounter: int
+        -clientCount: int
+        -userMap: ConcurrentHashMap<Socket, String>
+        -dictionaryManager: DictionaryManager
+        -serverSocket: ServerSocket
+        -port: int
+        -dictionaryFile: String
+        +main(args: String[]): void
+        +runServer(): void
+        +checkArguments(args: String[]): boolean
+    }
+
+    class ServerGUI {
+        -frame: JFrame
+        +outputArea: JTextArea
+        +textField: JTextField
+        +userListModel: DefaultListModel<String>
+        +userList: JList<String>
+        +logArea: JTextArea
+        +ServerGUI()
+        +run(): void
+        -initialize(): void
+    }
+
+    class RequestHandler {
+        -clientSocket: Socket
+        -reader: BufferedReader
+        -writer: BufferedWriter
+        -dictionaryManager: DictionaryManager
+        +RequestHandler(socket: Socket, dictionaryManager: DictionaryManager)
+        +run(): void
+        -handleAdd(jsonRequest: JSONObject): void
+        -handleQuery(jsonRequest: JSONObject): void
+        -handleDelete(jsonRequest: JSONObject): void
+        -handleAddMeaning(jsonRequest: JSONObject): void
+        -handleUpdate(jsonRequest: JSONObject): void
+        -createJsonResponse(status: String, message: String): String
+        -sendResponse(message: String): void
+        -sendErrorResponse(errorMsg: String): void
+        -log(message: String): void
+        -getClientInfo(): String
+    }
+
+    class DictionaryManager {
+        -dictionaryFile: String
+        -dictionary: ConcurrentHashMap<String, String>
+        +DictionaryManager(dictionaryFile: String, dictionary: ConcurrentHashMap<String, String>)
+        +loadDictionary(): void
+        +saveDictionary(): void
+        +updateDisplay(): void
+    }
+
+    %% Relationships
+    Server --> ServerGUI : creates
+    Server --> DictionaryManager : creates
+    Server --> RequestHandler : creates
+    RequestHandler --> DictionaryManager : uses
+    DictionaryManager --> ServerGUI : updates display
+    ServerGUI --> Server : displays server info
+```
+
+## 7 Future Enhancements
+
+###  Suggestions for Improvement
+
+* Add login/user authentication
+* Richer GUI feedback (e.g., color coding, animations)
+* Admin panel to ban or kick users
+
+###  Potential Feature Extensions
+
+* Dictionary search by prefix/suffix
+* Speech-to-text input for mobile use
+* Export dictionary to file (CSV, JSON)
+---
+## 8.Conclusion
 
 This distributed dictionary system demonstrates a clean, maintainable, and scalable architecture:
 

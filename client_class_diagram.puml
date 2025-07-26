@@ -1,1 +1,75 @@
- 
+@startuml Client Class Diagram
+
+package "client" {
+    class Client {
+        -serverAddress: String
+        -serverPort: int
+        -requestQueue: BlockingQueue<String>
+        -responseQueue: BlockingQueue<String>
+        +Client(inputAddress: String, inputPort: int)
+        +run(): void
+        +runClient(): void
+        +getResponse(): String
+        +isValidAddress(address: String): boolean
+        +checkArguments(args: String[]): boolean
+    }
+
+    class ClientUI {
+        -frame: JFrame
+        -client: Client
+        -wordField: JTextField
+        -meaningField: JTextField
+        -updateMeaningField: JTextField
+        -outputArea: JTextArea
+        -userDictionaryLabel: JLabel
+        +ClientUI(client: Client)
+        +getFrame(): JFrame
+        -initialize(): void
+    }
+
+    class ActionHandler {
+        -client: Client
+        -actionType: ActionType
+        -wordField: JTextField
+        -meaningField: JTextField
+        -updateMeaningField: JTextField
+        -outputArea: JTextArea
+        +ActionHandler(actionType: ActionType, wordField: JTextField, meaningField: JTextField, outputArea: JTextArea, client: Client)
+        +actionPerformed(e: ActionEvent): void
+        -handleAdd(): void
+        -handleQuery(): void
+        -handleDelete(): void
+        -handleAddMeaning(): void
+        -handleUpdate(): void
+        -sanitizeInput(input: String): String
+        -convertToJSONArray(input: String): JSONArray
+        -sendRequest(jsonRequest: JSONObject): String
+        -handleResponse(responseString: String): void
+        -resetFields(): void
+    }
+
+    enum ActionType {
+        ADD
+        QUERY
+        DELETE
+        ADD_MEANING
+        UPDATE
+    }
+
+    class ResponseHandler {
+        -reader: BufferedReader
+        -messageQueue: BlockingQueue<String>
+        +ResponseHandler(reader: BufferedReader, messageQueue: BlockingQueue<String>)
+        +run(): void
+    }
+
+    ' Relationships
+    ClientUI --> Client : uses
+    ClientUI --> ActionHandler : creates
+    ActionHandler --> Client : uses
+    ActionHandler --> ActionType : uses
+    Client --> ResponseHandler : creates
+    ResponseHandler --> Client : updates responseQueue
+}
+
+@enduml 
